@@ -49,19 +49,21 @@ jobs:
       - name: 'Terraform Plan'
         working-directory: ops/terraform
         run: |
+          var_file="dev"
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            terraform plan -var-file=environments/prod.tfvars
-          else
-            terraform plan -var-file=environments/dev.tfvars
+            var_file="prod"
           fi
+
+          terraform plan -var-file=environments/${var_file}.tfvars -var 'cluster_ssh_key=${{ secrets.SSH_PUBLIC_KEY }}'
 
       # Apply Terraform changes in the corresponding environment
       - name: 'Terraform Apply'
         working-directory: ops/terraform
         if: github.event_name == 'push'
         run: |
+          var_file="dev"
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            terraform apply -var-file=environments/prod.tfvars -var 'cluster_ssh_key=${{ secrets.SSH_PUBLIC_KEY }}' -auto-approve
-          else
-            terraform apply -var-file=environments/dev.tfvars -var 'cluster_ssh_key=${{ secrets.SSH_PUBLIC_KEY }}' -auto-approve
+            var_file="prod"
           fi
+
+          terraform apply -var-file=environments/${var_file}.tfvars -var 'cluster_ssh_key=${{ secrets.SSH_PUBLIC_KEY }}' -auto-approve
