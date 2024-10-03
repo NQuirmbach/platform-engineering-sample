@@ -6,7 +6,7 @@
 
 - name: Add Kubernetes apt repository
   apt_repository:
-    repo: "deb http://apt.kubernetes.io/ kubernetes-jammy main" # Here needs to be the current ubuntu version: lsb_release -cs
+    repo: "deb http://apt.kubernetes.io/ kubernetes-{{ ansible_distribution_release }} main"
     state: present
 
 - name: Install Kubernetes tools (kubeadm, kubelet, kubectl)
