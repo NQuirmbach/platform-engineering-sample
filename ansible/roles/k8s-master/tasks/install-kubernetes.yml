@@ -1,13 +1,15 @@
 ---
 - name: Add Kubernetes apt-key
   apt_key:
-    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
     state: present
 
 - name: Add Kubernetes apt repository
   apt_repository:
-    repo: "deb http://apt.kubernetes.io/ kubernetes-focal main"
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
+    filename: "kubernetes"
     state: present
+    update_cache: yes
 
 - name: Install Kubernetes tools (kubeadm, kubelet, kubectl)
   apt:
