@@ -14,7 +14,7 @@
     line: 'net.ipv4.ip_forward = 1'
 
 - name: Initialize Kubernetes master node with kubeadm
-  shell: kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }} --pod-network-cidr=10.244.0.0/16 --cri-socket=unix:///run/containerd/containerd.sock --image-repository=registry.k8s.io/pause:3.10
+  shell: kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }} --pod-network-cidr=10.244.0.0/16 --cri-socket=unix:///run/containerd/containerd.sock
   args:
     creates: /etc/kubernetes/admin.conf
 
