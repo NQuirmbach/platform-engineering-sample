@@ -1,12 +1,12 @@
 ---
 - name: Add Kubernetes apt-key
   apt_key:
-    url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
 
 - name: Add Kubernetes apt repository
   apt_repository:
-    repo: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+    repo: "deb http://apt.kubernetes.io/ kubernetes-jammy main" # Here needs to be the current ubuntu version: lsb_release -cs
     state: present
 
 - name: Install Kubernetes tools (kubeadm, kubelet, kubectl)
