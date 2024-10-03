@@ -1,13 +1,13 @@
 ---
-# - name: Add Kubernetes apt-key
-#   apt_key:
-#     url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
-#     state: present
+- name: Add Kubernetes apt-key
+  apt_key:
+    url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
+    state: present
 
-# - name: Add Kubernetes apt repository
-#   apt_repository:
-#     repo: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
-#     state: present
+- name: Add Kubernetes apt repository
+  apt_repository:
+    repo: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
 
 - name: Install Kubernetes tools (kubeadm, kubelet, kubectl)
   apt:
