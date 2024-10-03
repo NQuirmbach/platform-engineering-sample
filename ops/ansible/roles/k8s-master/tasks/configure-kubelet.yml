@@ -1,0 +1,22 @@
+---
+- name: Create kubelet config directory
+  file:
+    path: /var/lib/kubelet
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Configure kubelet to use containerd as the container runtime
+  copy:
+    content: |
+      KUBELET_EXTRA_ARGS=--container-runtime=remote --container-runtime-endpoint=unix:///run/containerd/containerd.sock --runtime-cgroups=/system.slice/containerd.service --kubelet-cgroups=/system.slice/kubelet.service
+    dest: /etc/default/kubelet
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted

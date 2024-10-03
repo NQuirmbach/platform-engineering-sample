@@ -1,0 +1,34 @@
+---
+- name: Install necessary packages for containerd
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+    update_cache: yes
+
+- name: Install containerd from official repository
+  apt:
+    name: containerd
+    state: present
+
+- name: Configure containerd
+  copy:
+    content: |
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+        runtime_type = "io.containerd.runc.v2"
+      [plugins."io.containerd.grpc.v1.cri".containerd]
+        snapshotter = "overlayfs"
+        default_runtime_name = "runc"
+    dest: /etc/containerd/config.toml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart and enable containerd service
+  systemd:
+    name: containerd
+    enabled: yes
+    state: restarted

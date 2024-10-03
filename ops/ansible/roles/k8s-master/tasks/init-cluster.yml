@@ -1,0 +1,31 @@
+---
+- name: Initialize Kubernetes master node with kubeadm
+  shell: kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }} --pod-network-cidr=10.244.0.0/16
+  args:
+    creates: /etc/kubernetes/admin.conf
+
+- name: Create .kube directory for the admin user
+  file:
+    path: /home/{{ ansible_user }}/.kube
+    state: directory
+    mode: 0755
+
+- name: Copy kubeconfig to admin user's .kube directory
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/{{ ansible_user }}/.kube/config
+    owner: "{{ ansible_user }}"
+    mode: 0644
+
+- name: Install Calico networking (or other CNI plugin)
+  shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  args:
+    executable: /bin/bash
+
+- name: Save Kubernetes join command for workers
+  shell: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Display join command
+  debug:
+    msg: "{{ join_command.stdout }}"

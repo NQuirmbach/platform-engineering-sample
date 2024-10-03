@@ -1,0 +1,12 @@
+---
+# Install containerd instead of Docker
+- include_tasks: install-containerd.yml
+
+# Install Kubernetes components (kubelet, kubeadm, kubectl)
+- include_tasks: install-kubernetes.yml
+
+# Configure kubelet to use containerd as the runtime
+- include_tasks: configure-kubelet.yml
+
+# Initialize the Kubernetes cluster
+- include_tasks: init-cluster.yml

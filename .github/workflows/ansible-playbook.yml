@@ -1,0 +1,47 @@
+name: Configure Kubernetes Master Node
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'ops/ansible/**'
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'ops/ansible/**'
+
+jobs:
+  configure-master:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Schritt 1: Repository auschecken
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Schritt 2: Installiere Ansible
+    - name: Install Ansible
+      run: |
+        sudo apt update
+        sudo apt install -y ansible
+
+    # Schritt 3: Setup SSH Key
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+      shell: bash
+
+    # Schritt 4: Füge die Master-Node zur known_hosts-Datei hinzu
+    - name: Add server to known hosts
+      run: ssh-keyscan -H ${{ variables.MASTER_NODE_IP }} >> ~/.ssh/known_hosts
+
+    # Schritt 5: Führe das Ansible-Playbook aus
+    - name: Run Ansible Playbook
+      run: |
+        ansible-playbook -i ${{ variables.MASTER_NODE_IP }}, -u ${{ variables.MASTER_NODE_USER }} ops/ansible/playbooks/master-setup.yml
