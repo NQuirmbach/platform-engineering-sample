@@ -41,5 +41,6 @@ jobs:
 
     # Schritt 5: Führe das Ansible-Playbook aus
     - name: Run Ansible Playbook
+      working-directory: ops/ansible
       run: |
-        ansible-playbook -i ${{ vars.MASTER_NODE_IP }}, -u ${{ vars.MASTER_NODE_USER }} ops/ansible/playbooks/master-setup.yml
+        ansible-playbook -i ${{ vars.MASTER_NODE_IP }}, -u ${{ vars.MASTER_NODE_USER }} playbooks/master-setup.yml
