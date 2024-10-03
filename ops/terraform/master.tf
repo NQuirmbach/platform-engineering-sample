@@ -2,7 +2,8 @@ resource "azurerm_public_ip" "master_public_ip" {
   name                = "k8s-cluster-master-ip"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  tags                = local.tags
 }
 
 resource "azurerm_network_interface" "master_nic" {
@@ -16,6 +17,7 @@ resource "azurerm_network_interface" "master_nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.master_public_ip.id
   }
+  tags = local.tags
 }
 
 resource "azurerm_linux_virtual_machine" "master" {
@@ -45,4 +47,5 @@ resource "azurerm_linux_virtual_machine" "master" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+  tags = local.tags
 }
