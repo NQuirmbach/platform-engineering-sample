@@ -40,7 +40,13 @@ jobs:
         ssh-keyscan -H ${{ vars.MASTER_NODE_IP }} >> ~/.ssh/known_hosts
 
     # Schritt 5: Führe das Ansible-Playbook aus
+
     - name: Run Ansible Playbook
       working-directory: ops/ansible
       run: |
-        ansible-playbook -i ${{ vars.MASTER_NODE_IP }}, -u ${{ vars.MASTER_NODE_USER }} playbooks/master-setup.yml
+        inv_file="inventory/staging"
+        if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+          inv_file="inventory/production"
+        fi
+
+        ansible-playbook -i "$inv_file" master-setup.yml
