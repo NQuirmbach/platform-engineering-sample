@@ -39,9 +39,9 @@ jobs:
 
     # Schritt 4: Füge die Master-Node zur known_hosts-Datei hinzu
     - name: Add server to known hosts
-      run: ssh-keyscan -H ${{ variables.MASTER_NODE_IP }} >> ~/.ssh/known_hosts
+      run: ssh-keyscan -H ${{ env.MASTER_NODE_IP }} >> ~/.ssh/known_hosts
 
     # Schritt 5: Führe das Ansible-Playbook aus
     - name: Run Ansible Playbook
       run: |
-        ansible-playbook -i ${{ variables.MASTER_NODE_IP }}, -u ${{ variables.MASTER_NODE_USER }} ops/ansible/playbooks/master-setup.yml
+        ansible-playbook -i ${{ env.MASTER_NODE_IP }}, -u ${{ env.MASTER_NODE_USER }} ops/ansible/playbooks/master-setup.yml
