@@ -31,7 +31,7 @@ resource "azurerm_linux_virtual_machine" "master" {
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "LRS"
+    storage_account_type = "StandardSSD_LRS"
   }
 
   admin_ssh_key {
