@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - .github/workflows/ansible-playbook.yml
-      - 'ops/ansible/**'
+      - 'ansible/**'
 
 jobs:
   configure-master:
@@ -41,7 +41,7 @@ jobs:
 
     # Schritt 5: Führe das Ansible-Playbook aus
     - name: Run Ansible Playbook
-      working-directory: ops/ansible
+      working-directory: ansible
       run: |
         inv_file="inventory/staging"
         if [ "${{ github.ref }}" == "refs/heads/main" ]; then

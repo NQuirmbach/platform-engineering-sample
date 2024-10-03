@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - .github/workflows/terraform.yml
-      - 'ops/terraform/**'
+      - 'terraform/**'
 
 env:
   ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
@@ -31,12 +31,12 @@ jobs:
 
       # Initialize Terraform
       - name: 'Terraform Init'
-        working-directory: ops/terraform
+        working-directory: terraform
         run: terraform init
 
       # Select Terraform Workspace
       - name: 'Select Terraform Workspace'
-        working-directory: ops/terraform
+        working-directory: terraform
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             terraform workspace select prod || terraform workspace new prod
@@ -46,7 +46,7 @@ jobs:
 
       # Plan Terraform changes based on the workspace-specific variables
       - name: 'Terraform Plan'
-        working-directory: ops/terraform
+        working-directory: terraform
         run: |
           var_file="staging"
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
@@ -57,7 +57,7 @@ jobs:
 
       # Apply Terraform changes in the corresponding environment
       - name: 'Terraform Apply'
-        working-directory: ops/terraform
+        working-directory: terraform
         if: github.event_name == 'push'
         run: |
           var_file="staging"
