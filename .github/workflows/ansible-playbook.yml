@@ -33,14 +33,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
       shell: bash
 
-    # Schritt 4: Füge die Master-Node zur known_hosts-Datei hinzu
-    - name: Add server to known hosts
-      run: |
-        echo "Adding server ${{ vars.MASTER_NODE_IP }} to the known hosts"
-        ssh-keyscan -H ${{ vars.MASTER_NODE_IP }} >> ~/.ssh/known_hosts
-
-    # Schritt 5: Führe das Ansible-Playbook aus
-
+    # Schritt 4: Führe das Ansible-Playbook aus
     - name: Run Ansible Playbook
       working-directory: ops/ansible
       run: |
