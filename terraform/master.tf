@@ -1,4 +1,5 @@
 locals {
+  # https://kubernetes.io/docs/reference/networking/ports-and-protocols/#control-plane
   master_node_network_rules = {
     "22" = {
       name      = "SSH"
@@ -6,17 +7,17 @@ locals {
       direction = "Inbound"
     }
     "6443" = {
-      name      = "Kubernetes API server"
+      name      = "Kubernetes-API-server"
       priority  = 2001
       direction = "Inbound"
     }
     "2379-2380" = {
-      name      = "etcd server client API"
+      name      = "etcd-server-client-API"
       priority  = 2002
       direction = "Inbound"
     }
     "10250" = {
-      name      = "Kubelet API"
+      name      = "Kubelet-API"
       priority  = 2003
       direction = "Inbound"
     }
