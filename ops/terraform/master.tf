@@ -1,3 +1,10 @@
+resource "azurerm_public_ip" "master_public_ip" {
+  name                = "k8s-cluster-master-ip"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"
+}
+
 resource "azurerm_network_interface" "master_nic" {
   name                = "k8s-cluster-master-nic"
   location            = azurerm_resource_group.rg.location
@@ -7,7 +14,7 @@ resource "azurerm_network_interface" "master_nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.public_ip.id
+    public_ip_address_id          = azurerm_public_ip.master_public_ip.id
   }
 }
 
