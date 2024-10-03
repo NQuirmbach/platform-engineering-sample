@@ -1,7 +1,14 @@
 name: Configure Kubernetes Master Node
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
 
 jobs:
   configure-master:
