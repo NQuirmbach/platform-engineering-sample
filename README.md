@@ -48,6 +48,7 @@ The goal of this project is to automate the deployment of infrastructure using *
 - [ ] Extend support for multi-region Kubernetes clusters with automated failover.
 - [ ] Automate the certificate renewal process for SSH access using Let's Encrypt.
 - [ ] Set up testing infrastructure to validate infrastructure changes in a staging environment before production.
+- [ ] Improve Terraform Workflow [Link](https://github.com/Azure-Samples/terraform-github-actions/blob/main/.github/workflows/tf-plan-apply.yml)
 
 ## License
 

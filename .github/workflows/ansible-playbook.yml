@@ -5,10 +5,9 @@ on:
     branches:
       - develop
       - main
-  pull_request:
-    branches:
-      - develop
-      - main
+    paths:
+      - .github/workflows/ansible-playbook.yml
+      - 'ops/ansible/**'
 
 jobs:
   configure-master:
@@ -34,6 +33,7 @@ jobs:
       shell: bash
 
     # Schritt 4: Füge die Master-Node zur known_hosts-Datei hinzu
+    # TODO: Aus Inventory Datei auslesen
     - name: Add server to known hosts
       run: |
         echo "Adding server ${{ vars.MASTER_NODE_IP }} to the known hosts"

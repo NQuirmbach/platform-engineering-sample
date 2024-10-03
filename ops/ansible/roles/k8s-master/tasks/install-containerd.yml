@@ -14,6 +14,14 @@
     name: containerd
     state: present
 
+- name: Ensure the /etc/containerd directory exists
+  file:
+    path: /etc/containerd
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: Configure containerd
   copy:
     content: |
