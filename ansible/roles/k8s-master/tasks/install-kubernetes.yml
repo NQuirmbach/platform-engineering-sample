@@ -1,13 +1,19 @@
 ---
-- name: Add Kubernetes apt-key
-  apt_key:
-    url: "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key"
-    state: present
+- name: Ensure the directory for Kubernetes apt keyring exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Add Kubernetes apt key
+  command: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 - name: Add Kubernetes apt repository
   apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
-    filename: "kubernetes"
+    repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /'
+    filename: 'kubernetes'
     state: present
     update_cache: yes
 
