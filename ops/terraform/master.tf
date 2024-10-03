@@ -19,6 +19,10 @@ resource "azurerm_network_interface" "master_nic" {
   }
   tags = local.tags
 }
+resource "azurerm_network_interface_security_group_association" "master_nic_nsg" {
+  network_interface_id      = azurerm_network_interface.master_nic.id
+  network_security_group_id = azurerm_network_security_group.nsg
+}
 
 resource "azurerm_linux_virtual_machine" "master" {
   name                = "k8s-cluster-master"
