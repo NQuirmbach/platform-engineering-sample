@@ -24,12 +24,13 @@
     state: directory
     mode: 0755
 
-- name: Copy kubeconfig to admin user's .kube directory
+- name: Copy kubeconfig to admin user .kube directory
   copy:
     src: /etc/kubernetes/admin.conf
     dest: /home/{{ ansible_user }}/.kube/config
     owner: "{{ ansible_user }}"
     mode: 0644
+    remote_src: yes  # Hier geben wir an, dass die Datei auf dem Remote-Server liegt
 
 - name: Install Calico networking (or other CNI plugin)
   shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
