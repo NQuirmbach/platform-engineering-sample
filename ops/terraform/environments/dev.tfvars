@@ -1,1 +1,1 @@
-azure_location="WestEurope"
+environment="dev"

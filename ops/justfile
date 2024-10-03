@@ -26,16 +26,23 @@ create-az-sp:
   #!/usr/bin/env bash
   az ad sp create-for-rbac --name k8s-cluster-sp --role Contributor --scopes "/subscriptions/$ARM_SUBSCRIPTION_ID" > azure-sp.json
 
-tf-plan:
-  #!/usr/bin/env bash
-  cd terraform
-  env=$(terraform workspace show)
-  echo -e "Planning for workspace $env"
-  terraform plan -var-file="environments/$env.tfvars"
+# tf-plan:
+#   #!/usr/bin/env bash
+#   cd terraform
+#   env=$(terraform workspace show)
+#   echo -e "Planning for workspace $env"
+#   terraform plan -var-file="environments/$env.tfvars"
 
-tf-apply:
-  #!/usr/bin/env bash
-  cd terraform
-  env=$(terraform workspace show)
-  echo -e "Applying changes for workspace $env"
-  terraform apply -var-file="environments/$env.tfvars"
+# tf-apply:
+#   #!/usr/bin/env bash
+#   cd terraform
+#   env=$(terraform workspace show)
+#   echo -e "Applying changes for workspace $env"
+#   terraform apply -var-file="environments/$env.tfvars"
+
+# tf-destroy:
+#   #!/usr/bin/env bash
+#   cd terraform
+#   env=$(terraform workspace show)
+#   echo -e "Applying changes for workspace $env"
+#   terraform destroy -var-file="environments/$env.tfvars"

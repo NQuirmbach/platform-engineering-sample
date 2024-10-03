@@ -1,0 +1,70 @@
+name: 'Terraform Deploy to Azure'
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: 'Checkout GitHub repository'
+        uses: actions/checkout@v3
+
+      # Install Terraform CLI
+      - name: 'Set up Terraform'
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      # Login to Azure
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Initialize Terraform
+      - name: 'Terraform Init'
+        working-directory: ops/terraform
+        run: terraform init
+
+      # Select Terraform Workspace
+      - name: 'Select Terraform Workspace'
+        working-directory: ops/terraform
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            terraform workspace select prod || terraform workspace new prod
+          else
+            terraform workspace select dev || terraform workspace new dev
+          fi
+
+      # Plan Terraform changes based on the workspace-specific variables
+      - name: 'Terraform Plan'
+        working-directory: ops/terraform
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            terraform plan -var-file=environments/prod.tfvars
+          else
+            terraform plan -var-file=environments/dev.tfvars
+          fi
+
+      # Apply Terraform changes in the corresponding environment
+      - name: 'Terraform Apply'
+        working-directory: ops/terraform
+        if: github.event_name == 'push'
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            terraform apply -var-file=environments/prod.tfvars -auto-approve
+          else
+            terraform apply -var-file=environments/dev.tfvars -auto-approve
+          fi
