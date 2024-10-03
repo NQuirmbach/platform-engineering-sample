@@ -21,7 +21,7 @@ resource "azurerm_network_interface" "master_nic" {
 }
 resource "azurerm_network_interface_security_group_association" "master_nic_nsg" {
   network_interface_id      = azurerm_network_interface.master_nic.id
-  network_security_group_id = azurerm_network_security_group.nsg
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 resource "azurerm_linux_virtual_machine" "master" {
