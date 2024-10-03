@@ -1,6 +1,7 @@
 name: Configure Kubernetes Master Node
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
