@@ -19,6 +19,7 @@ provider "azurerm" {
 }
 
 locals {
+  vm_admin_user = "clusteradmin"
   tags = {
     env     = var.environment
     app     = "k8s-cluster"

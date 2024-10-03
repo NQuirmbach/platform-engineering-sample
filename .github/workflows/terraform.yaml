@@ -61,7 +61,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            terraform apply -var-file=environments/prod.tfvars -auto-approve
+            terraform apply -var-file=environments/prod.tfvars -var 'cluster_ssh_key=${{ secrets.SSH_PUBLIC_KEY }}' -auto-approve
           else
-            terraform apply -var-file=environments/dev.tfvars -auto-approve
+            terraform apply -var-file=environments/dev.tfvars -var 'cluster_ssh_key=${{ secrets.SSH_PUBLIC_KEY }}' -auto-approve
           fi
