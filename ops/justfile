@@ -1,0 +1,41 @@
+set dotenv-filename := ".env"
+
+_default:
+  just --list
+
+# Creates an Azure storage account that will be used as terraform backend
+create-tf-backend:
+  #!/usr/bin/env bash
+  az account show
+  suffix=$(date +%s)
+  account_name="tfbackend${suffix}"
+  location="westeurope"
+  az group create --name "$TF_BACKEND_GROUP" --location "$location"
+  az storage account create --name "$account_name" --resource-group "$TF_BACKEND_GROUP" --location "$location" --sku Standard_LRS
+  az storage container create --name tfstate --account-name "$account_name"
+  echo "Created storage account: $account_name"
+  az storage account keys list --resource-group "$TF_BACKEND_GROUP" --account-name "$account_name" --query '[0].value' --output tsv
+
+# Deletes the terraform backend resource group
+delete-tf-backend:
+  #!/usr/bin/env bash
+  az group delete --name "$TF_BACKEND_GROUP"
+
+# Create a new Azure SP with contributor role for the subscription. Not the best practice, but serves for now
+create-az-sp:
+  #!/usr/bin/env bash
+  az ad sp create-for-rbac --name k8s-cluster-sp --role Contributor --scopes "/subscriptions/$ARM_SUBSCRIPTION_ID" > azure-sp.json
+
+tf-plan:
+  #!/usr/bin/env bash
+  cd terraform
+  env=$(terraform workspace show)
+  echo -e "Planning for workspace $env"
+  terraform plan -var-file="environments/$env.tfvars"
+
+tf-apply:
+  #!/usr/bin/env bash
+  cd terraform
+  env=$(terraform workspace show)
+  echo -e "Applying changes for workspace $env"
+  terraform apply -var-file="environments/$env.tfvars"
