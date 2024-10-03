@@ -1,4 +1,4 @@
-name: 'Terraform Deploy to Azure'
+name: 'Provision Azure Resources'
 
 on:
   push:
@@ -6,12 +6,7 @@ on:
       - develop
       - main
     paths:
-      - 'ops/terraform/**'
-  pull_request:
-    branches:
-      - develop
-      - main
-    paths:
+      - .github/workflows/terraform.yml
       - 'ops/terraform/**'
 
 env:
@@ -46,14 +41,14 @@ jobs:
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             terraform workspace select prod || terraform workspace new prod
           else
-            terraform workspace select dev || terraform workspace new dev
+            terraform workspace select staging || terraform workspace new staging
           fi
 
       # Plan Terraform changes based on the workspace-specific variables
       - name: 'Terraform Plan'
         working-directory: ops/terraform
         run: |
-          var_file="dev"
+          var_file="staging"
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             var_file="prod"
           fi
@@ -65,7 +60,7 @@ jobs:
         working-directory: ops/terraform
         if: github.event_name == 'push'
         run: |
-          var_file="dev"
+          var_file="staging"
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             var_file="prod"
           fi

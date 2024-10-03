@@ -28,7 +28,7 @@ locals {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "k8s-cluster-rg"
+  name     = "k8s-cluster-rg-${var.environment}"
   location = var.azure_location
   tags     = local.tags
 }
